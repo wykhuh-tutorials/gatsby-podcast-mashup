@@ -1,13 +1,37 @@
 import React from "react"
 import { graphql } from "gatsby"
 
-export default ({ data }) => (
-  <ul>
-    {data.oneGraph.fehh.rss2Feed.items.map(item => (
-      <li>{item.title}</li>
-    ))}
-  </ul>
-)
+const sortPodcasts = podcastArr =>
+  podcastArr.reduce((acc, podcast) => {
+    const image = podcast.rss2Feed.image
+    const title = podcast.rss2Feed.title
+    const items = podcast.rss2Feed.items
+
+    return [
+      ...acc,
+      ...items.map(item => ({
+        ...item,
+        podcast: {
+          title,
+          image,
+        },
+      })),
+    ].sort((a, b) => b.pubDate - a.pubDate)
+  }, [])
+
+export default ({ data }) => {
+  const items = sortPodcasts([data.oneGraph.fehh, data.oneGraph.rp])
+
+  return (
+    <ul>
+      {items.map(item => (
+        <li>
+          {item.pubDate}: {item.title}
+        </li>
+      ))}
+    </ul>
+  )
+}
 
 // graphql - during build, gatsby will run the graphql query, embed data into
 // the source code,  and delete all graphql code from source code.
