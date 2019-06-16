@@ -26,7 +26,15 @@ export default ({ data }) => {
     <ul>
       {items.map(item => (
         <li>
-          {item.pubDate}: {item.title}
+          <img
+            src={item.podcast.image.uri}
+            alt={item.podcast.title}
+            style={{ maxWidth: 100 }}
+          />
+          <h2>
+            {new Date(item.pubDate).toLocaleString()}: {item.podcast.title}
+          </h2>
+          <p>{item.title}</p>
         </li>
       ))}
     </ul>
